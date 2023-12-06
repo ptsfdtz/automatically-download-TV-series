@@ -1,7 +1,13 @@
 import os
 import requests
 from tqdm import tqdm
-import zipfile
+
+user_input = input("视频集数,链接,存储路径（用逗号分隔）: ")
+values = user_input.split(',')
+
+total = int(values[0])
+original_url = values[1]
+path = values[2]
 
 def download_file(url, path, filename):
     response = requests.get(url, stream=True)
@@ -37,36 +43,8 @@ def replace_last_digit(url, replacement):
     else:
         return url
 
-def zip_folder(folder_path, zip_path):
-    print("Zipping...")
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, dirs, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                arcname = os.path.relpath(file_path, folder_path)
-                zipf.write(file_path, arcname)
-
-def main():
-    user_input = input("视频集数,链接,存储路径,压缩（用逗号分隔）: ")
-    values = user_input.split(',')
-
-    total = int(values[0]) + 1
-    original_url = values[1]
-    base_path = values[2]
-    selection = values[3]
-
-    download_folder = os.path.join(base_path, 'downloaded_files')
-
-    for replacement_digit in range(1, total):
-        modified_url = replace_last_digit(original_url, replacement_digit)
-        destination_file = f"downloaded_file_{replacement_digit}.mp4"
-        download_file(modified_url, download_folder, destination_file)
-        print(f"File downloaded: {destination_file}")
-
-    if selection.lower() == 'yes':
-        zip_file_path = os.path.join(base_path, 'downloaded_files.zip')
-        zip_folder(download_folder, zip_file_path)
-        print(f"All files downloaded and zipped to: {zip_file_path}")
-
-if __name__ == "__main__":
-    main()
+for replacement_digit in range(1, total):
+    modified_url = replace_last_digit(original_url, replacement_digit)
+    destination_file = f"downloaded_file_{replacement_digit}.mp4"
+    download_file(modified_url, path, destination_file)
+    print(f"File downloaded: {destination_file}")
