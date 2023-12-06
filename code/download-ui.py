@@ -14,11 +14,24 @@ class VideoDownloaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("关注披头散发的秃子喵")
-        root.geometry("560x640")
+        root.geometry("560x320")
 
         self.background_images = [
             "image\\background_image1.jpg",
             "image\\background_image2.jpg",
+            "image\\background_image3.jpg",
+            "image\\background_image4.jpg",
+            "image\\background_image5.jpg",
+            "image\\background_image6.jpg",
+            "image\\background_image7.jpg",
+            "image\\background_image8.jpg",
+            "image\\background_image9.jpg",
+            "image\\background_image10.jpg",
+            "image\\background_image11.jpg",
+            "image\\background_image12.jpg",
+            "image\\background_image13.jpg",
+            "image\\background_image14.jpg",
+            "image\\background_image15.jpg",
         ]
         self.current_background_index = 0
         self.load_background_image()
@@ -152,3 +165,4 @@ if __name__ == "__main__":
     root = Tk()
     app = VideoDownloaderApp(root)
     root.mainloop()
+    
