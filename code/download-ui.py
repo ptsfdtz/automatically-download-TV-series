@@ -1,23 +1,27 @@
 import os
 import requests
 import threading
-from tkinter import Tk, Label, Entry, Button, StringVar, IntVar, ttk
+from tkinter import Tk, Button, ttk, IntVar
 from PIL import Image, ImageTk
 from tqdm import tqdm
 
+class TransparentButton(Button):
+    def __init__(self, master=None, **kwargs):
+        Button.__init__(self, master, **kwargs)
+        self['bg'] = self.master['bg']  # Set the button background to be the same as the parent
 
 class VideoDownloaderApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Video Downloader")
+        self.root.title("关注披头散发的秃子喵")
+        root.geometry("560x640")
 
-        root.geometry("1080x640")
-
-        self.background_image = Image.open("image\\background_image.jpg")
-        self.background_photo = ImageTk.PhotoImage(self.background_image)
-
-        self.background_label = ttk.Label(root, image=self.background_photo)
-        self.background_label.place(relwidth=1, relheight=1)
+        self.background_images = [
+            "image\\background_image1.jpg",
+            "image\\background_image2.jpg",
+        ]
+        self.current_background_index = 0
+        self.load_background_image()
 
         self.label_total = ttk.Label(root, text="视频集数:")
         self.label_total.grid(row=0, column=0, padx=20, pady=10, sticky='w')
@@ -43,10 +47,11 @@ class VideoDownloaderApp:
 
         self.button_style = ttk.Style()
         self.button_style.configure("TButton", font=('Helvetica', 14), width=5, height=2) 
-        self.button = ttk.Button(root, text="下载", command=self.start_download, style="TButton")
+
+        self.button = TransparentButton(root, text="下载", command=self.start_download, font=('Helvetica', 14), width=5, height=2)
         self.button.grid(row=3, column=0, padx=20, pady=10, sticky='w')
 
-        self.stop_button = ttk.Button(root, text="停止", command=self.stop_download, style="TButton")
+        self.stop_button = TransparentButton(root, text="停止", command=self.stop_download, font=('Helvetica', 14), width=5, height=2)
         self.stop_button.grid(row=3, column=1, padx=20, pady=10, sticky='w')
 
         root.grid_rowconfigure(3, weight=1)
@@ -55,10 +60,26 @@ class VideoDownloaderApp:
         self.thread = None
         self.stop_event = threading.Event()
 
+    def load_background_image(self):
+        background_path = self.background_images[self.current_background_index]
+        self.background_image = Image.open(background_path)
+        self.background_photo = ImageTk.PhotoImage(self.background_image)
+
+        if hasattr(self, 'background_label'):
+            self.background_label.configure(image=self.background_photo)
+            self.background_label.image = self.background_photo
+        else:
+            self.background_label = ttk.Label(self.root, image=self.background_photo)
+            self.background_label.place(relwidth=1, relheight=1)
+
+    def update_background(self):
+        self.current_background_index = (self.current_background_index + 1) % len(self.background_images)
+        self.load_background_image()
+
     def start_download(self):
         self.progress_var.set(0)
 
-        total = int(self.entry_total.get())
+        total = int(self.entry_total.get()) + 1
         original_url = self.entry_url.get()
         path = self.entry_path.get()
 
@@ -79,6 +100,9 @@ class VideoDownloaderApp:
 
             progress_value = (replacement_digit / total) * 100
             self.progress_var.set(progress_value)
+
+            if replacement_digit % 1 == 0:
+                self.update_background()
 
         self.button.configure(state='normal')
 
@@ -104,7 +128,6 @@ class VideoDownloaderApp:
                 for data in response.iter_content(block_size):
                     if self.stop_event.is_set():
                         break
-
                     bar.update(len(data))
                     file.write(data)
 
@@ -124,7 +147,6 @@ class VideoDownloaderApp:
         if self.thread is not None:
             self.thread.join()
         self.stop_event.clear()
-
 
 if __name__ == "__main__":
     root = Tk()
