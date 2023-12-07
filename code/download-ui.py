@@ -2,13 +2,13 @@ import os
 import requests
 import threading
 from tkinter import Tk, Button, ttk, IntVar
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageEnhance
 from tqdm import tqdm
 
 class TransparentButton(Button):
     def __init__(self, master=None, **kwargs):
         Button.__init__(self, master, **kwargs)
-        self['bg'] = self.master['bg']  # Set the button background to be the same as the parent
+        self['bg'] = self.master['bg']
 
 class VideoDownloaderApp:
     def __init__(self, root):
@@ -76,6 +76,10 @@ class VideoDownloaderApp:
     def load_background_image(self):
         background_path = self.background_images[self.current_background_index]
         self.background_image = Image.open(background_path)
+
+        enhancer = ImageEnhance.Brightness(self.background_image)
+        self.background_image = enhancer.enhance(1.0) 
+
         self.background_photo = ImageTk.PhotoImage(self.background_image)
 
         if hasattr(self, 'background_label'):
@@ -165,4 +169,3 @@ if __name__ == "__main__":
     root = Tk()
     app = VideoDownloaderApp(root)
     root.mainloop()
-    
