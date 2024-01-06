@@ -131,7 +131,7 @@ class VideoDownloaderApp:
             if not os.path.exists(path):
                 os.makedirs(path)
 
-            print(f"Downloading {full_path}")
+            print(f"下载进度 {full_path}")
 
             total_size = int(response.headers.get('content-length', 0))
             block_size = 1024
@@ -152,7 +152,7 @@ class VideoDownloaderApp:
             print(f"Failed to download file. Status code: {response.status_code}")
 
     def replace_last_digit(self, url, replacement):
-        last_digit_index = url.rfind('1')
+        last_digit_index = url.rfind('/')
         if last_digit_index != -1:
             modified_url = url[:last_digit_index] + str(replacement) + url[last_digit_index + 1:]
             return modified_url
