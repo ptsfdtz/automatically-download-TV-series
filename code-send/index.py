@@ -29,9 +29,9 @@ def send_email(sender_email, sender_password, recipient_email, subject, body):
 
     print("邮件已发送成功！")
 
-sender_email = "pitousanfadetuzi@gmail.com"
-sender_password = "13775760629qq"
-recipient_email = "1652675907@qq.com"
+sender_email = "@gmail.com"
+sender_password = ""
+recipient_email = "@qq.com"
 subject = "head"
 body = "test"
 

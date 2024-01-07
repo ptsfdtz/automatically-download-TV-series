@@ -28,4 +28,12 @@ pip install -r requirements.txt
 
 如果需要压缩文件不能使用 UI 界面，还没有增加该功能。
 
-## 更新 ing
+使用命令行操作可以使用`download.py`
+
+需要压缩使用`download-all.py`
+
+使用 ui 界面操作选择`download-ui.py`
+
+## 目前还在更新自动爬取视频内容，不需要自行输入 url，卡在自动登录界面了
+
+## 以及自动发送邮件的脚本也在更新
